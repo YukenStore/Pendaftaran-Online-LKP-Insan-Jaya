@@ -389,15 +389,15 @@
                 </div>
 
                 <!-- Navigation Buttons -->
-                <div class="flex justify-between pt-6 border-t border-slate-100">
-                    <button type="button" id="btnPrev" onclick="changeStep(-1)" class="hidden px-6 py-3 rounded-xl bg-slate-100 text-slate-600 font-bold hover:bg-slate-200 transition-colors">
+                <div class="flex flex-col-reverse sm:flex-row gap-3 pt-6 border-t border-slate-100">
+                    <button type="button" id="btnPrev" onclick="changeStep(-1)" class="hidden w-full sm:w-auto px-6 py-3 rounded-xl bg-slate-100 text-slate-600 font-bold hover:bg-slate-200 transition-colors">
                         KEMBALI
                     </button>
-                    <div class="flex-1"></div>
-                    <button type="button" id="btnNext" onclick="changeStep(1)" class="px-6 py-3 rounded-xl bg-violet-600 text-white font-bold hover:bg-violet-700 transition-colors shadow-lg shadow-violet-200">
+                    <div class="hidden sm:block flex-1"></div>
+                    <button type="button" id="btnNext" onclick="changeStep(1)" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-violet-600 text-white font-bold hover:bg-violet-700 transition-colors shadow-lg shadow-violet-200">
                         LANJUT
                     </button>
-                    <button type="submit" id="btnSubmit" class="hidden px-8 py-3 rounded-xl bg-green-600 text-white font-bold hover:bg-green-700 transition-colors shadow-lg shadow-green-200">
+                    <button type="submit" id="btnSubmit" class="hidden w-full sm:w-auto px-8 py-3 rounded-xl bg-green-600 text-white font-bold hover:bg-green-700 transition-colors shadow-lg shadow-green-200 whitespace-nowrap">
                         KIRIM FORMULIR
                     </button>
                 </div>
