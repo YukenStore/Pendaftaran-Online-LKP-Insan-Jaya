@@ -298,7 +298,7 @@
 
                             <div>
                                 <label class="block text-[11px] font-bold text-slate-500 uppercase mb-2">Jam Belajar</label>
-                                <select id="jam" name="jam" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-violet-500">
+                                <select id="jam" name="jam" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl appearance-none outline-none focus:ring-2 focus:ring-violet-500">
                                     <option value="" disabled selected>Pilih jam...</option>
                                     <option value="07.30-09.00">07.30 - 09.00</option>
                                     <option value="09.00-10.30">09.00 - 10.30</option>
@@ -497,6 +497,18 @@
             const customContainer = document.getElementById('customJamContainer');
             const jadwalContainer = document.getElementById('customJadwalContainer');
             const hariBelajarContainer = document.getElementById('hariBelajarContainer');
+
+            // Limit 3 hari
+            const checkboxes = document.querySelectorAll('input[name="hari"]');
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', () => {
+                    const checked = document.querySelectorAll('input[name="hari"]:checked');
+                    if (checked.length > 3) {
+                        cb.checked = false;
+                        alert('Maksimal pilih 3 hari!');
+                    }
+                });
+            });
 
             jamSelect.addEventListener('change', () => {
                 if (jamSelect.value === 'CUSTOM') {
