@@ -3,397 +3,472 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rekap Pendaftaran Online</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#7c3aed">
+    <title>Pendaftaran Online - LKP Insan Jaya</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        if (!localStorage.getItem('lkp_user_email')) {
-            window.location.href = 'index.html';
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Bricolage+Grotesque:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .font-bricolage { font-family: 'Bricolage Grotesque', sans-serif; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .form-section { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .form-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased overflow-hidden flex h-[100dvh] relative">
-    <div id="sidebarOverlay" class="fixed inset-0 bg-slate-900/50 z-40 hidden transition-opacity opacity-0 md:hidden"></div>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen relative overflow-x-hidden">
+    <!-- Background Decoration -->
+    <div class="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-violet-300/40 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse" style="animation-duration: 8s;"></div>
+    <div class="fixed top-[20%] right-[-10%] w-[500px] h-[500px] bg-fuchsia-300/40 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse" style="animation-duration: 10s;"></div>
 
-    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col w-64 h-full bg-white border-r border-slate-200 z-50 flex-shrink-0 shadow-2xl md:shadow-none">
-        <div class="h-16 flex items-center justify-between px-6 border-b border-slate-100">
-            <div class="flex items-center gap-1">
-                <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center overflow-hidden">
-                    <img src="Logo Insan Jaya.png" alt="Logo Insan Jaya" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/150'" />
-                </div>
-                <div class="flex flex-col justify-center">
-                    <span class="font-bricolage font-bold text-sm text-slate-900 leading-tight">LKP</span>
-                    <span class="font-bricolage font-bold text-sm text-violet-600 leading-tight">INSAN JAYA</span>
-                </div>
+    <div class="relative z-10 w-full max-w-3xl mx-auto p-4 sm:p-6 lg:p-8 pt-8 pb-20">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white shadow-lg border border-slate-100 overflow-hidden mb-4">
+                <img src="Logo Insan Jaya.png" alt="Logo LKP" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/150'">
             </div>
-            <button id="closeSidebarBtn" class="md:hidden p-2 -mr-2 text-slate-400 hover:text-red-500 rounded-lg bg-slate-50 transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
+            <h1 class="font-bricolage text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight mb-2">Formulir Pendaftaran</h1>
+            <p class="text-slate-500 font-medium max-w-lg mx-auto">Isilah formulir di bawah ini dengan data yang sebenarnya untuk keperluan pendaftaran di LKP Insan Jaya.</p>
         </div>
 
-        <nav class="flex-1 overflow-y-auto custom-scrollbar py-4 px-3 space-y-1">
-            <p class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 mt-1">Menu Utama</p>
-            
-            <a href="rekap-online.html" id="navRekapOnline" class="flex justify-between items-center px-3 py-2.5 bg-violet-50 text-violet-700 rounded-xl font-semibold text-sm transition-colors">
-                <div class="flex items-center gap-3">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                    Pendaftaran Online
+        <!-- Form Card -->
+        <div class="bg-white/90 backdrop-blur-xl rounded-[2rem] shadow-2xl border border-white p-6 sm:p-10 relative overflow-hidden">
+            <!-- Progress Bar -->
+            <div class="mb-8">
+                <div class="flex justify-between text-xs font-bold text-slate-400 mb-2 px-1">
+                    <span id="step1-text" class="text-violet-600">1. Data Diri</span>
+                    <span id="step2-text">2. Orang Tua</span>
+                    <span id="step3-text">3. Program</span>
                 </div>
-                <span id="badgeNotifMenu" class="hidden bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
-            </a>
-
-            <a href="pendaftaran.html" id="navPendaftaran" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-sm transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                Pendaftaran Baru
-            </a>
-            <a href="absensi siswa.html" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-sm transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
-                Absensi Siswa
-            </a>
-            <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-sm transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
-                Data Siswa Aktif
-            </a>
-
-            <p class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 mt-6">Akademik</p>
-            <a href="laporan.html" class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-sm transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                Laporan Hasil Belajar
-            </a>
-        </nav>
-
-        <div class="p-4 border-t border-slate-100 mt-auto bg-white">
-            <div class="flex items-center gap-3 mb-4 px-2">
-                <div class="w-10 h-10 rounded-full bg-violet-100 overflow-hidden flex-shrink-0 border border-violet-200">
-                    <img id="userProfilePic" src="https://ui-avatars.com/api/?name=User" alt="Profile" class="w-full h-full object-cover">
-                </div>
-                <div class="overflow-hidden">
-                    <p id="userNameDisplay" class="text-sm font-bold text-slate-800 truncate">Memuat...</p>
-                    <p id="userEmailDisplay" class="text-[10px] font-medium text-slate-500 truncate">Memuat email...</p>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div id="progressBar" class="bg-violet-600 h-full transition-all duration-300 ease-out w-1/3"></div>
                 </div>
             </div>
-            <a href="index.html" id="btnLogout" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 text-red-600 bg-red-50 hover:bg-red-100 rounded-xl font-bold text-sm transition-colors border border-red-100">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-                Keluar
-            </a>
-        </div>
-    </aside>
 
-    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
-        <header class="md:hidden h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 z-10 flex-shrink-0">
-            <div class="flex items-center gap-2">
-                <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center overflow-hidden border">
-                    <img src="Logo Insan Jaya.png" class="w-full h-full object-contain">
-                </div>
-                <div class="flex items-center gap-1">
-                    <span class="font-bricolage font-bold text-base text-slate-900">LKP</span>
-                    <span class="font-bricolage font-bold text-base text-violet-600">INSAN JAYA</span>
-                </div>
-            </div>
-            <button id="mobileMenuBtn" class="p-2 text-slate-600 hover:text-violet-600 hover:bg-slate-50 rounded-lg transition-colors">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
-            </button>
-        </header>
-
-        <div class="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-                    <div>
-                        <h1 class="font-bricolage text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">Pendaftaran Online</h1>
-                        <p class="text-sm text-slate-500 mt-1">Daftar calon siswa yang mengisi formulir secara online.</p>
+            <form id="onlineForm" class="space-y-6">
+                <!-- ================= SECTION 1: DATA DIRI ================= -->
+                <div id="section1" class="form-section active space-y-5">
+                    <h2 class="text-xl font-bold font-bricolage text-slate-800 border-b pb-2 mb-4">Data Pribadi Siswa</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="col-span-1 md:col-span-2">
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Nama Lengkap *</label>
+                            <input type="text" id="nama_lengkap" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-500 outline-none transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Jenis Kelamin *</label>
+                            <select id="jenis_kelamin" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl appearance-none focus:ring-2 focus:ring-violet-500 outline-none">
+                                <option value="" disabled selected>Pilih...</option>
+                                <option value="LAKI-LAKI">LAKI - LAKI</option>
+                                <option value="PEREMPUAN">PEREMPUAN</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Agama *</label>
+                            <select id="agama" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl appearance-none focus:ring-2 focus:ring-violet-500 outline-none">
+                                <option value="" disabled selected>Pilih...</option>
+                                <option value="ISLAM">ISLAM</option>
+                                <option value="KRISTEN">KRISTEN</option>
+                                <option value="KATHOLIK">KATHOLIK</option>
+                                <option value="HINDU">HINDU</option>
+                                <option value="BUDHA">BUDHA</option>
+                                <option value="KONGHUCU">KONGHUCU</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Tempat Lahir</label>
+                            <input type="text" id="tempat_lahir" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Tanggal Lahir</label>
+                            <input type="date" id="tanggal_lahir" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">NISN</label>
+                            <input type="text" id="nisn" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">NIK</label>
+                            <input type="text" id="nik" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-500 outline-none">
+                        </div>
+                        <div class="col-span-1 md:col-span-2">
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Alamat Lengkap</label>
+                            <textarea id="alamat" rows="2" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-500 outline-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Kewarganegaraan</label>
+                            <input type="text" id="kewarganegaraan" value="WNI" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-500 outline-none">
+                        </div>
+                        <div class="col-span-1 md:col-span-2 mt-4">
+                            <h3 class="text-sm font-bold text-slate-700 mb-2">Program Bantuan KPS (Kartu Perlindungan Sosial)</h3>
+                            <div class="flex gap-4">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="penerima_kps" value="YA" class="w-4 h-4 text-violet-600 focus:ring-violet-500" onchange="toggleKpsField(true)">
+                                    <span class="text-sm text-slate-700">Ya, Menerima</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="penerima_kps" value="TIDAK" checked class="w-4 h-4 text-violet-600 focus:ring-violet-500" onchange="toggleKpsField(false)">
+                                    <span class="text-sm text-slate-700">Tidak</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="noKpsContainer" class="col-span-1 md:col-span-2 hidden">
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Nomor KPS</label>
+                            <input type="text" id="no_kps" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-500 outline-none">
+                        </div>
                     </div>
-                    <button onclick="fetchData()" class="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-xl font-medium text-sm transition-colors shadow-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                        Muat Ulang
+                </div>
+
+                <!-- ================= SECTION 2: DATA ORANG TUA ================= -->
+                <div id="section2" class="form-section space-y-5">
+                    <h2 class="text-xl font-bold font-bricolage text-slate-800 border-b pb-2 mb-4">Data Orang Tua / Wali</h2>
+                    
+                    <!-- IBU -->
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                        <h3 class="font-bold text-violet-700 mb-3 flex items-center gap-2">Data Ibu Kandung</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Nama Ibu</label>
+                                <input type="text" id="nama_ibu" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tahun Lahir Ibu</label>
+                                <input type="text" id="tahun_lahir_ibu" placeholder="Contoh: 1985" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Pekerjaan Ibu</label>
+                                <select id="pekerjaan_ibu" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg appearance-none outline-none">
+                                    <option value="">Pilih Pekerjaan...</option>
+                                    <option value="TIDAK BEKERJA">1. TIDAK BEKERJA</option>
+                                    <option value="NELAYAN">2. NELAYAN</option>
+                                    <option value="PETANI">3. PETANI</option>
+                                    <option value="PETERNAK">4. PETERNAK</option>
+                                    <option value="PNS/TNI/POLRI">5. PNS/TNI/POLRI</option>
+                                    <option value="KARYAWAN SWASTA">6. KARYAWAN SWASTA</option>
+                                    <option value="PEDAGANG KECIL">7. PEDAGANG KECIL</option>
+                                    <option value="PEDAGANG BESAR">8. PEDAGANG BESAR</option>
+                                    <option value="WIRASWASTA">9. WIRASWASTA</option>
+                                    <option value="WIRAUSAHA">10. WIRAUSAHA</option>
+                                    <option value="BURUH">11. BURUH</option>
+                                    <option value="PENSIUNAN">12. PENSIUNAN</option>
+                                    <option value="LAINNYA">13. LAINNYA</option>
+                                </select>
+                            </div>
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Penghasilan Ibu</label>
+                                <select id="penghasilan_ibu" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg appearance-none outline-none">
+                                    <option value="">Pilih Penghasilan...</option>
+                                    <option value="< Rp. 500.000">1. &lt; Rp. 500.000</option>
+                                    <option value="Rp. 500.000 - Rp. 999.999">2. Rp. 500.000 - Rp. 999.999</option>
+                                    <option value="Rp. 1.000.000 - Rp. 1.999.999">3. Rp. 1.000.000 - Rp. 1.999.999</option>
+                                    <option value="Rp. 2.000.000 - Rp. 4.999.999">4. Rp. 2.000.000 - Rp. 4.999.999</option>
+                                    <option value="Rp. 5.000.000 - Rp. 20.000.000">5. Rp. 5.000.000 - Rp. 20.000.000</option>
+                                    <option value="> Rp. 20.000.000">6. &gt; Rp. 20.000.000</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AYAH -->
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                        <h3 class="font-bold text-blue-700 mb-3">Data Ayah Kandung</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Nama Ayah</label>
+                                <input type="text" id="nama_ayah" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tahun Lahir Ayah</label>
+                                <input type="text" id="tahun_lahir_ayah" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Pekerjaan Ayah</label>
+                                <select id="pekerjaan_ayah" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg appearance-none outline-none">
+                                    <option value="">Pilih Pekerjaan...</option>
+                                    <option value="TIDAK BEKERJA">1. TIDAK BEKERJA</option>
+                                    <option value="NELAYAN">2. NELAYAN</option>
+                                    <option value="PETANI">3. PETANI</option>
+                                    <option value="PETERNAK">4. PETERNAK</option>
+                                    <option value="PNS/TNI/POLRI">5. PNS/TNI/POLRI</option>
+                                    <option value="KARYAWAN SWASTA">6. KARYAWAN SWASTA</option>
+                                    <option value="PEDAGANG KECIL">7. PEDAGANG KECIL</option>
+                                    <option value="PEDAGANG BESAR">8. PEDAGANG BESAR</option>
+                                    <option value="WIRASWASTA">9. WIRASWASTA</option>
+                                    <option value="WIRAUSAHA">10. WIRAUSAHA</option>
+                                    <option value="BURUH">11. BURUH</option>
+                                    <option value="PENSIUNAN">12. PENSIUNAN</option>
+                                    <option value="LAINNYA">13. LAINNYA</option>
+                                </select>
+                            </div>
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Penghasilan Ayah</label>
+                                <select id="penghasilan_ayah" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg appearance-none outline-none">
+                                    <option value="">Pilih Penghasilan...</option>
+                                    <option value="< Rp. 500.000">1. &lt; Rp. 500.000</option>
+                                    <option value="Rp. 500.000 - Rp. 999.999">2. Rp. 500.000 - Rp. 999.999</option>
+                                    <option value="Rp. 1.000.000 - Rp. 1.999.999">3. Rp. 1.000.000 - Rp. 1.999.999</option>
+                                    <option value="Rp. 2.000.000 - Rp. 4.999.999">4. Rp. 2.000.000 - Rp. 4.999.999</option>
+                                    <option value="Rp. 5.000.000 - Rp. 20.000.000">5. Rp. 5.000.000 - Rp. 20.000.000</option>
+                                    <option value="> Rp. 20.000.000">6. &gt; Rp. 20.000.000</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WALI (Opsional) -->
+                    <div class="p-4 rounded-2xl border border-slate-200 border-dashed cursor-pointer hover:bg-slate-50 transition" onclick="toggleWali()">
+                        <h3 class="font-bold text-slate-600 flex justify-between items-center">
+                            Data Wali (Opsional)
+                            <svg id="waliIcon" class="w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </h3>
+                        <div id="waliContent" class="hidden mt-4 pt-4 border-t grid grid-cols-1 md:grid-cols-2 gap-4" onclick="event.stopPropagation()">
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Nama Wali</label>
+                                <input type="text" id="nama_wali" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tahun Lahir Wali</label>
+                                <input type="text" id="tahun_lahir_wali" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Pekerjaan Wali</label>
+                                <select id="pekerjaan_wali" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg appearance-none outline-none">
+                                    <option value="">Pilih Pekerjaan...</option>
+                                    <option value="TIDAK BEKERJA">1. TIDAK BEKERJA</option>
+                                    <option value="NELAYAN">2. NELAYAN</option>
+                                    <option value="PETANI">3. PETANI</option>
+                                    <option value="PETERNAK">4. PETERNAK</option>
+                                    <option value="PNS/TNI/POLRI">5. PNS/TNI/POLRI</option>
+                                    <option value="KARYAWAN SWASTA">6. KARYAWAN SWASTA</option>
+                                    <option value="PEDAGANG KECIL">7. PEDAGANG KECIL</option>
+                                    <option value="PEDAGANG BESAR">8. PEDAGANG BESAR</option>
+                                    <option value="WIRASWASTA">9. WIRASWASTA</option>
+                                    <option value="WIRAUSAHA">10. WIRAUSAHA</option>
+                                    <option value="BURUH">11. BURUH</option>
+                                    <option value="PENSIUNAN">12. PENSIUNAN</option>
+                                    <option value="LAINNYA">13. LAINNYA</option>
+                                </select>
+                            </div>
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Penghasilan Wali</label>
+                                <select id="penghasilan_wali" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg appearance-none outline-none">
+                                    <option value="">Pilih Penghasilan...</option>
+                                    <option value="< Rp. 500.000">1. &lt; Rp. 500.000</option>
+                                    <option value="Rp. 500.000 - Rp. 999.999">2. Rp. 500.000 - Rp. 999.999</option>
+                                    <option value="Rp. 1.000.000 - Rp. 1.999.999">3. Rp. 1.000.000 - Rp. 1.999.999</option>
+                                    <option value="Rp. 2.000.000 - Rp. 4.999.999">4. Rp. 2.000.000 - Rp. 4.999.999</option>
+                                    <option value="Rp. 5.000.000 - Rp. 20.000.000">5. Rp. 5.000.000 - Rp. 20.000.000</option>
+                                    <option value="> Rp. 20.000.000">6. &gt; Rp. 20.000.000</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= SECTION 3: AKADEMIK ================= -->
+                <div id="section3" class="form-section space-y-5">
+                    <h2 class="text-xl font-bold font-bricolage text-slate-800 border-b pb-2 mb-4">Program & Kontak</h2>
+                    
+                    <div class="grid grid-cols-1 gap-5">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Pilih Program *</label>
+                            <select id="program" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl appearance-none focus:ring-2 focus:ring-violet-500 outline-none">
+                                <option value="" disabled selected>Pilih program...</option>
+                                <option value="Bahasa Arab">Bahasa Arab</option>
+                                <option value="Bahasa Inggris">Bahasa Inggris</option>
+                                <option value="Bimbel">Bimbel</option>
+                                <option value="Calistung">Calistung</option>
+                                <option value="Komputer">Komputer</option>
+                                <option value="Menggambar & Mewarnai">Menggambar & Mewarnai</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Waktu Belajar *</label>
+                            <input type="text" id="waktu_belajar" required placeholder="Contoh: Pagi / Siang / Bebas" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">No. Handphone / WhatsApp *</label>
+                            <input type="text" id="no_handphone" required placeholder="Contoh: 0812xxxxxx" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-500 outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Warning Check -->
+                    <div class="mt-6 bg-yellow-50 p-4 rounded-xl flex gap-3 border border-yellow-200">
+                        <svg class="w-6 h-6 text-yellow-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <p class="text-sm text-yellow-800">Pastikan semua data yang diisikan sudah benar sebelum mengirimkan formulir.</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between pt-6 border-t border-slate-100">
+                    <button type="button" id="btnPrev" onclick="changeStep(-1)" class="hidden px-6 py-3 rounded-xl bg-slate-100 text-slate-600 font-bold hover:bg-slate-200 transition-colors">
+                        KEMBALI
+                    </button>
+                    <div class="flex-1"></div>
+                    <button type="button" id="btnNext" onclick="changeStep(1)" class="px-6 py-3 rounded-xl bg-violet-600 text-white font-bold hover:bg-violet-700 transition-colors shadow-lg shadow-violet-200">
+                        LANJUT
+                    </button>
+                    <button type="submit" id="btnSubmit" class="hidden px-8 py-3 rounded-xl bg-green-600 text-white font-bold hover:bg-green-700 transition-colors shadow-lg shadow-green-200">
+                        KIRIM FORMULIR
                     </button>
                 </div>
-
-                <div class="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse whitespace-nowrap">
-                            <thead>
-                                <tr class="bg-slate-50/80 border-b border-slate-200 text-slate-500 text-[11px] uppercase tracking-wider font-bold">
-                                    <th class="px-6 py-4">Waktu Daftar</th>
-                                    <th class="px-6 py-4">Nama Siswa</th>
-                                    <th class="px-6 py-4">Program</th>
-                                    <th class="px-6 py-4">No. HP</th>
-                                    <th class="px-6 py-4 text-center">Status</th>
-                                    <th class="px-6 py-4 text-right">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody" class="divide-y divide-slate-100 text-sm">
-                                <tr><td colspan="6" class="text-center py-8 text-slate-400">Memuat data...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            </form>
         </div>
-    </main>
+    </div>
 
-    <!-- Modal Detail Pendaftar -->
-    <div id="modalDetail" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col transform scale-95 opacity-0 transition-all duration-300" id="modalDetailContent">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-10">
-                <h3 class="font-bricolage font-bold text-xl text-slate-800">Detail Pendaftaran</h3>
-                <button onclick="closeModalDetail()" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
+    <!-- Modal Success -->
+    <div id="modalSuccess" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2rem] p-8 max-w-sm w-full text-center shadow-2xl transform scale-95 opacity-0 transition-all duration-300" id="modalSuccessContent">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
             </div>
-            
-            <div class="p-6 overflow-y-auto custom-scrollbar flex-1 bg-slate-50/50" id="detailContent">
-                <!-- Data will be injected here -->
-            </div>
-
-            <div class="p-6 border-t border-slate-100 bg-white flex justify-end gap-3 sticky bottom-0">
-                <button onclick="closeModalDetail()" class="px-6 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold hover:bg-slate-200 transition-colors">Tutup</button>
-                <div id="actionButtons"></div>
-            </div>
+            <h3 class="font-bricolage text-2xl font-bold text-slate-800 mb-2">Pendaftaran Berhasil!</h3>
+            <p class="text-slate-500 mb-6">Terima kasih telah mendaftar. Admin kami akan segera menghubungi Anda melalui nomor handphone yang terdaftar.</p>
+            <button onclick="window.location.reload()" class="w-full px-6 py-3 rounded-xl bg-violet-600 text-white font-bold hover:bg-violet-700 transition-colors">
+                SELESAI
+            </button>
         </div>
     </div>
 
     <script>
-        const adminEmails = ['lpkinsanjaya@gmail.com', 'yumenoboken@gmail.com', 'elsasidamawarniut@gmail.com', 'zilisaje@gmail.com'];
+        // Logic multi-step form
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        function toggleKpsField(show) {
+            document.getElementById('noKpsContainer').classList.toggle('hidden', !show);
+        }
+
+        function toggleWali() {
+            const content = document.getElementById('waliContent');
+            const icon = document.getElementById('waliIcon');
+            content.classList.toggle('hidden');
+            if(content.classList.contains('hidden')) {
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function updateUI() {
+            // Hide all
+            for (let i = 1; i <= totalSteps; i++) {
+                document.getElementById(`section${i}`).classList.remove('active');
+                document.getElementById(`step${i}-text`).classList.remove('text-violet-600');
+                document.getElementById(`step${i}-text`).classList.add('text-slate-400');
+            }
+            // Show current
+            document.getElementById(`section${currentStep}`).classList.add('active');
+            document.getElementById(`step${currentStep}-text`).classList.add('text-violet-600');
+            document.getElementById(`step${currentStep}-text`).classList.remove('text-slate-400');
+
+            // Progress bar
+            document.getElementById('progressBar').style.width = `${(currentStep / totalSteps) * 100}%`;
+
+            // Buttons
+            document.getElementById('btnPrev').classList.toggle('hidden', currentStep === 1);
+            if (currentStep === totalSteps) {
+                document.getElementById('btnNext').classList.add('hidden');
+                document.getElementById('btnSubmit').classList.remove('hidden');
+            } else {
+                document.getElementById('btnNext').classList.remove('hidden');
+                document.getElementById('btnSubmit').classList.add('hidden');
+            }
+        }
+
+        function checkRequiredInCurrentStep() {
+            const section = document.getElementById(`section${currentStep}`);
+            const requiredFields = section.querySelectorAll('[required]');
+            for (let field of requiredFields) {
+                if (!field.value.trim()) {
+                    field.focus();
+                    field.classList.add('ring-2', 'ring-red-500');
+                    setTimeout(() => field.classList.remove('ring-2', 'ring-red-500'), 2000);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function changeStep(dir) {
+            if (dir === 1 && !checkRequiredInCurrentStep()) {
+                return; // don't proceed if required fields are missing
+            }
+            currentStep += dir;
+            if (currentStep < 1) currentStep = 1;
+            if (currentStep > totalSteps) currentStep = totalSteps;
+            updateUI();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         const API_URL = 'https://absensi-api.yumenoboken.workers.dev';
-        let allData = [];
-        let currentDetailId = null;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const userName = localStorage.getItem('lkp_user_name') || 'Admin LKP';
-            const userEmail = localStorage.getItem('lkp_user_email');
-            const userPic = localStorage.getItem('lkp_user_picture');
-
-            if (!userEmail || !adminEmails.includes(userEmail)) {
-                alert("Akses Ditolak. Halaman ini hanya untuk Admin.");
-                window.location.href = 'dashboard.html';
-                return;
-            }
-
-            document.getElementById('userNameDisplay').textContent = userName;
-            document.getElementById('userEmailDisplay').textContent = userEmail;
-            if (userPic) {
-                document.getElementById('userProfilePic').src = userPic;
-            } else {
-                document.getElementById('userProfilePic').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}`;
-            }
-
-            // Mobile sidebar logic
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            function toggleSidebar() {
-                sidebar.classList.toggle('-translate-x-full');
-                overlay.classList.toggle('hidden');
-                if(!overlay.classList.contains('hidden')) {
-                    setTimeout(() => overlay.classList.remove('opacity-0'), 10);
-                } else {
-                    overlay.classList.add('opacity-0');
-                }
-            }
-            document.getElementById('mobileMenuBtn').addEventListener('click', toggleSidebar);
-            document.getElementById('closeSidebarBtn').addEventListener('click', toggleSidebar);
-            overlay.addEventListener('click', toggleSidebar);
-
-            // Logout
-            document.getElementById('btnLogout').addEventListener('click', (e) => {
-                if (!confirm('Apakah Anda yakin ingin keluar?')) e.preventDefault();
-                else localStorage.clear();
-            });
-
-            fetchData();
-        });
-
-        async function fetchWithAuth(url, options = {}) {
-            const userEmail = localStorage.getItem('lkp_user_email');
-            const headers = { 'X-Admin-Email': userEmail || '', 'Content-Type': 'application/json', ...(options.headers || {}) };
-            const res = await fetch(url, { ...options, headers });
-            if (res.status === 403) throw new Error("Bukan Admin");
-            if (res.status === 401) { localStorage.clear(); window.location.href = 'index.html'; }
-            return res;
-        }
-
-        async function fetchData() {
-            try {
-                const res = await fetchWithAuth(`${API_URL}/api/pendaftaran-online`);
-                allData = await res.json();
-                renderTable();
-                updateBadge(allData.filter(d => d.status === 'Baru').length);
-            } catch (err) {
-                document.getElementById('tableBody').innerHTML = `<tr><td colspan="6" class="text-center py-8 text-red-500 font-medium">Gagal memuat data</td></tr>`;
-            }
-        }
-
-        function updateBadge(count) {
-            const badge = document.getElementById('badgeNotifMenu');
-            if(count > 0) {
-                badge.textContent = count;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-        }
-
-        function formatDate(dateStr) {
-            if(!dateStr) return "-";
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-        }
-
-        function renderTable() {
-            const tbody = document.getElementById('tableBody');
-            if (allData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10"><div class="flex flex-col items-center"><svg class="w-12 h-12 text-slate-200 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg><span class="text-slate-500 font-medium">Belum ada data pendaftaran</span></div></td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = allData.map(d => {
-                let statusBadge = '';
-                if(d.status === 'Baru') statusBadge = `<span class="px-2.5 py-1 bg-yellow-100 text-yellow-700 rounded-lg text-xs font-bold border border-yellow-200">Baru</span>`;
-                else if(d.status === 'Diterima') statusBadge = `<span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-bold border border-green-200">Diterima</span>`;
-                else statusBadge = `<span class="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold border border-slate-200">${d.status}</span>`;
-
-                return `
-                <tr class="hover:bg-slate-50/50 transition-colors group">
-                    <td class="px-6 py-4 text-slate-500">${formatDate(d.waktu_daftar)}</td>
-                    <td class="px-6 py-4 font-bold text-slate-800">${d.nama_lengkap}</td>
-                    <td class="px-6 py-4 text-slate-600">${d.program}</td>
-                    <td class="px-6 py-4 text-slate-600">${d.no_handphone || '-'}</td>
-                    <td class="px-6 py-4 text-center">${statusBadge}</td>
-                    <td class="px-6 py-4 text-right">
-                        <button onclick="openDetail(${d.id})" class="px-4 py-2 bg-white text-violet-600 border border-violet-200 hover:bg-violet-50 rounded-xl font-bold text-xs transition-colors shadow-sm">Lihat Detail</button>
-                    </td>
-                </tr>
-                `;
-            }).join('');
-        }
-
-        function renderRow(label, value) {
-            return `
-            <div class="border-b border-slate-100 py-3 flex flex-col md:flex-row md:items-start gap-1 md:gap-4">
-                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider md:w-1/3 flex-shrink-0">${label}</span>
-                <span class="text-sm font-medium text-slate-800 md:w-2/3">${value || '-'}</span>
-            </div>`;
-        }
-
-        function openDetail(id) {
-            const d = allData.find(x => x.id === id);
-            if(!d) return;
-            currentDetailId = id;
-
-            const html = `
-                <div class="space-y-6">
-                    <div>
-                        <h4 class="font-bricolage font-bold text-violet-700 mb-2 border-b-2 border-violet-100 inline-block">Data Pribadi</h4>
-                        <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm mt-2">
-                            ${renderRow('Nama Lengkap', d.nama_lengkap)}
-                            ${renderRow('Jenis Kelamin', d.jenis_kelamin)}
-                            ${renderRow('Agama', d.agama)}
-                            ${renderRow('Tempat, Tgl Lahir', `${d.tempat_lahir || ''}, ${d.tanggal_lahir || ''}`)}
-                            ${renderRow('NISN', d.nisn)}
-                            ${renderRow('NIK', d.nik)}
-                            ${renderRow('Alamat', d.alamat)}
-                            ${renderRow('Penerima KPS', d.penerima_kps === 'YA' ? `Ya (No: ${d.no_kps})` : 'Tidak')}
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 class="font-bricolage font-bold text-blue-700 mb-2 border-b-2 border-blue-100 inline-block">Data Orang Tua / Wali</h4>
-                        <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm mt-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <p class="text-sm font-bold text-slate-600 mb-2">Data Ibu</p>
-                                ${renderRow('Nama', d.nama_ibu)}
-                                ${renderRow('Tahun Lahir', d.tahun_lahir_ibu)}
-                                ${renderRow('Pekerjaan', d.pekerjaan_ibu)}
-                                ${renderRow('Penghasilan', d.penghasilan_ibu)}
-                            </div>
-                            <div>
-                                <p class="text-sm font-bold text-slate-600 mb-2">Data Ayah</p>
-                                ${renderRow('Nama', d.nama_ayah)}
-                                ${renderRow('Tahun Lahir', d.tahun_lahir_ayah)}
-                                ${renderRow('Pekerjaan', d.pekerjaan_ayah)}
-                                ${renderRow('Penghasilan', d.penghasilan_ayah)}
-                            </div>
-                            ${d.nama_wali ? `
-                            <div class="md:col-span-2 pt-4 border-t border-slate-100">
-                                <p class="text-sm font-bold text-slate-600 mb-2">Data Wali</p>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
-                                    ${renderRow('Nama', d.nama_wali)}
-                                    ${renderRow('Tahun Lahir', d.tahun_lahir_wali)}
-                                    ${renderRow('Pekerjaan', d.pekerjaan_wali)}
-                                    ${renderRow('Penghasilan', d.penghasilan_wali)}
-                                </div>
-                            </div>
-                            ` : ''}
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 class="font-bricolage font-bold text-green-700 mb-2 border-b-2 border-green-100 inline-block">Program & Kontak</h4>
-                        <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm mt-2">
-                            ${renderRow('Program', d.program)}
-                            ${renderRow('Waktu Belajar', d.waktu_belajar)}
-                            ${renderRow('No. HP / WA', d.no_handphone)}
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('detailContent').innerHTML = html;
+        document.getElementById('onlineForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
             
-            const actions = document.getElementById('actionButtons');
-            if(d.status === 'Baru') {
-                actions.innerHTML = `
-                    <button onclick="updateStatus(${d.id}, 'Ditolak')" class="px-6 py-2.5 rounded-xl bg-red-50 text-red-600 font-bold hover:bg-red-100 transition-colors">Tolak</button>
-                    <button onclick="updateStatus(${d.id}, 'Diterima')" class="px-6 py-2.5 rounded-xl bg-green-600 text-white font-bold hover:bg-green-700 shadow-lg shadow-green-200 transition-colors">Terima Pendaftaran</button>
-                `;
-            } else {
-                actions.innerHTML = ``;
-            }
+            const btnSubmit = document.getElementById('btnSubmit');
+            const originalText = btnSubmit.innerHTML;
+            btnSubmit.innerHTML = 'MENGIRIM... ⏳';
+            btnSubmit.disabled = true;
 
-            const modal = document.getElementById('modalDetail');
-            const content = document.getElementById('modalDetailContent');
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                content.classList.remove('scale-95', 'opacity-0');
-                content.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
+            const payload = {
+                nama_lengkap: document.getElementById('nama_lengkap').value,
+                jenis_kelamin: document.getElementById('jenis_kelamin').value,
+                nisn: document.getElementById('nisn').value,
+                nik: document.getElementById('nik').value,
+                tempat_lahir: document.getElementById('tempat_lahir').value,
+                tanggal_lahir: document.getElementById('tanggal_lahir').value,
+                agama: document.getElementById('agama').value,
+                alamat: document.getElementById('alamat').value,
+                kewarganegaraan: document.getElementById('kewarganegaraan').value,
+                penerima_kps: document.querySelector('input[name="penerima_kps"]:checked').value,
+                no_kps: document.getElementById('no_kps').value,
+                
+                nama_ibu: document.getElementById('nama_ibu').value,
+                pekerjaan_ibu: document.getElementById('pekerjaan_ibu').value,
+                penghasilan_ibu: document.getElementById('penghasilan_ibu').value,
+                tahun_lahir_ibu: document.getElementById('tahun_lahir_ibu').value,
+                
+                nama_ayah: document.getElementById('nama_ayah').value,
+                pekerjaan_ayah: document.getElementById('pekerjaan_ayah').value,
+                penghasilan_ayah: document.getElementById('penghasilan_ayah').value,
+                tahun_lahir_ayah: document.getElementById('tahun_lahir_ayah').value,
+                
+                nama_wali: document.getElementById('nama_wali').value,
+                pekerjaan_wali: document.getElementById('pekerjaan_wali').value,
+                penghasilan_wali: document.getElementById('penghasilan_wali').value,
+                tahun_lahir_wali: document.getElementById('tahun_lahir_wali').value,
+                
+                program: document.getElementById('program').value,
+                waktu_belajar: document.getElementById('waktu_belajar').value,
+                no_handphone: document.getElementById('no_handphone').value
+            };
 
-        function closeModalDetail() {
-            const modal = document.getElementById('modalDetail');
-            const content = document.getElementById('modalDetailContent');
-            content.classList.remove('scale-100', 'opacity-100');
-            content.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
-
-        async function updateStatus(id, status) {
-            if(!confirm(`Apakah Anda yakin ingin mengubah status pendaftaran ini menjadi ${status}?`)) return;
-            
             try {
-                const res = await fetchWithAuth(`${API_URL}/api/pendaftaran-online/status`, {
+                const res = await fetch(`${API_URL}/api/pendaftaran-online`, {
                     method: 'POST',
-                    body: JSON.stringify({ id, status })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
                 });
-                if(res.ok) {
-                    closeModalDetail();
-                    fetchData();
-                    if(status === 'Diterima') {
-                        alert("Pendaftaran berhasil diterima! Silakan daftarkan anak ini secara resmi ke kelas melalui menu Pendaftaran Baru.");
-                    }
+
+                if (res.ok) {
+                    const modal = document.getElementById('modalSuccess');
+                    const modalContent = document.getElementById('modalSuccessContent');
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modalContent.classList.remove('scale-95', 'opacity-0');
+                        modalContent.classList.add('scale-100', 'opacity-100');
+                    }, 10);
+                } else {
+                    alert('Gagal mengirim pendaftaran. Silakan coba lagi.');
+                    btnSubmit.innerHTML = originalText;
+                    btnSubmit.disabled = false;
                 }
-            } catch(e) {
-                alert("Gagal mengupdate status.");
+            } catch (err) {
+                alert('Terjadi kesalahan jaringan.');
+                btnSubmit.innerHTML = originalText;
+                btnSubmit.disabled = false;
             }
-        }
+        });
     </script>
 </body>
 </html>
