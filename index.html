@@ -268,7 +268,7 @@
                 <div id="section3" class="form-section space-y-5">
                     <h2 class="text-xl font-bold font-bricolage text-slate-800 border-b pb-2 mb-4">Program & Kontak</h2>
                     
-                    <div class="grid grid-cols-1 gap-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Pilih Program *</label>
                             <select id="program" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl appearance-none focus:ring-2 focus:ring-violet-500 outline-none">
@@ -279,6 +279,12 @@
                                 <option value="Calistung">Calistung</option>
                                 <option value="Komputer">Komputer</option>
                                 <option value="Menggambar & Mewarnai">Menggambar & Mewarnai</option>
+                            </select>
+                        </div>
+                        <div id="kelasContainer" class="hidden">
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Pilih Kelas *</label>
+                            <select id="kelas" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl appearance-none focus:ring-2 focus:ring-violet-500 outline-none">
+                                <option value="" disabled selected>Pilih kelas...</option>
                             </select>
                         </div>
                         <div class="col-span-1 md:col-span-2 mt-2">
@@ -375,7 +381,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        <div class="col-span-1 md:col-span-2">
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">No. Handphone / WhatsApp *</label>
                             <input type="text" id="no_handphone" required placeholder="Contoh: 0812xxxxxx" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-500 outline-none">
                         </div>
@@ -384,7 +390,10 @@
                     <!-- Warning Check -->
                     <div class="mt-6 bg-yellow-50 p-4 rounded-xl flex gap-3 border border-yellow-200">
                         <svg class="w-6 h-6 text-yellow-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                        <p class="text-sm text-yellow-800">Pastikan semua data yang diisikan sudah benar sebelum mengirimkan formulir.</p>
+                        <div class="space-y-1">
+                            <p class="text-sm text-yellow-800">Pastikan semua data yang diisikan sudah benar sebelum mengirimkan formulir.</p>
+                            <p class="text-sm font-bold text-yellow-900">Catatan: Jadwal belajar yang dipilih akan ditinjau ulang terlebih dahulu oleh admin.</p>
+                        </div>
                     </div>
                 </div>
 
@@ -497,6 +506,39 @@
         }
 
             const API_URL = 'https://absensi-api.yumenoboken.workers.dev';
+
+            // Kelas Logic
+            const CLASSES_BY_PROGRAM = {
+                "Bimbel": ["Kelas 1", "Kelas 2", "Kelas 3", "Kelas 4", "Kelas 5", "Kelas 6"],
+                "Bahasa Inggris": ["Beginner", "Intermediate", "Upper Intermediate", "Advanced"],
+                "Bahasa Arab": ["Iqra + B Arab Dasar"],
+                "Komputer": ["MS Office"],
+                "Calistung": ["Baca + Tulis + Hitung"],
+                "Menggambar & Mewarnai": ["Gambar + Warna"]
+            };
+
+            const programSelect = document.getElementById('program');
+            const kelasContainer = document.getElementById('kelasContainer');
+            const kelasSelect = document.getElementById('kelas');
+
+            programSelect.addEventListener('change', () => {
+                const selectedProgram = programSelect.value;
+                const classes = CLASSES_BY_PROGRAM[selectedProgram];
+                
+                kelasSelect.innerHTML = '<option value="" disabled selected>Pilih kelas...</option>';
+                
+                if (classes && classes.length > 0) {
+                    kelasContainer.classList.remove('hidden');
+                    classes.forEach(c => {
+                        const option = document.createElement('option');
+                        option.value = c;
+                        option.textContent = c;
+                        kelasSelect.appendChild(option);
+                    });
+                } else {
+                    kelasContainer.classList.add('hidden');
+                }
+            });
 
             // Jadwal Belajar Logic
             const jamSelect = document.getElementById('jam');
@@ -624,6 +666,7 @@
                     tahun_lahir_wali: document.getElementById('tahun_lahir_wali').value,
                     
                     program: document.getElementById('program').value,
+                    kelas: document.getElementById('kelas') ? document.getElementById('kelas').value : "",
                     waktu_belajar: jadwalFinal,
                     no_handphone: document.getElementById('no_handphone').value
                 };
