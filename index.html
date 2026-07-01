@@ -668,7 +668,8 @@
                     program: document.getElementById('program').value,
                     kelas: document.getElementById('kelas') ? document.getElementById('kelas').value : "",
                     waktu_belajar: jadwalFinal,
-                    no_handphone: document.getElementById('no_handphone').value
+                    no_handphone: document.getElementById('no_handphone').value,
+                    waktu_pendaftaran: new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })
                 };
 
             try {
